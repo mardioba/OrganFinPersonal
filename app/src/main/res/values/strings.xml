@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">OrganFin Personal</string>
+    <string name="saldo_atual">Saldo Atual</string>
+    <string name="nova_despesa">Nova Despesa</string>
+    <string name="nova_receita">Nova Receita</string>
+    <string name="relatorio_mensal">Relatório Mensal</string>
+    <string name="titulo">Título</string>
+    <string name="valor">Valor</string>
+    <string name="categoria">Categoria</string>
+    <string name="data">Data</string>
+    <string name="tipo">Tipo</string>
+    <string name="observacao">Observação</string>
+    <string name="despesa">Despesa</string>
+    <string name="receita">Receita</string>
+    <string name="recorrente">Recorrente</string>
+    <string name="quantidade_parcelas">Quantidade de Parcelas</string>
+    <string name="salvar">Salvar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="transacoes">Transações</string>
+    <string name="filtro_mes_ano">Filtrar por Mês/Ano</string>
+    <string name="total_despesas">Total de Despesas</string>
+    <string name="total_receitas">Total de Receitas</string>
+    <string name="saldo_final">Saldo Final</string>
+    <string name="exportar_pdf">Exportar PDF</string>
+    <string name="transacao_salva">Transação salva com sucesso!</string>
+    <string name="erro_salvar">Erro ao salvar transação</string>
+    <string name="preencha_campos">Preencha todos os campos obrigatórios</string>
+</resources>

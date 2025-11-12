@@ -30,6 +30,10 @@ fun ListaTransacoesScreen(
     val mesSelecionado by viewModel.mesSelecionado.collectAsState()
     val anoSelecionado by viewModel.anoSelecionado.collectAsState()
     
+    var transacaoSelecionada by remember { mutableStateOf<Transacao?>(null) }
+    var mostrarDialogoRecorrente by remember { mutableStateOf(false) }
+    var mostrarDialogoSimples by remember { mutableStateOf(false) }
+    
     val meses = listOf(
         "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
         "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
@@ -57,6 +61,83 @@ fun ListaTransacoesScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            transacaoSelecionada?.let { selecionada ->
+                if (mostrarDialogoRecorrente && selecionada.recorrente) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            mostrarDialogoRecorrente = false
+                            transacaoSelecionada = null
+                        },
+                        title = { Text("Excluir transação recorrente") },
+                        text = {
+                            Text("Deseja excluir apenas esta parcela ou todas as parcelas futuras desta série?")
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    viewModel.deletarTransacao(selecionada, incluirSerie = true)
+                                    mostrarDialogoRecorrente = false
+                                    transacaoSelecionada = null
+                                }
+                            ) {
+                                Text("Excluir série")
+                            }
+                        },
+                        dismissButton = {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                TextButton(
+                                    onClick = {
+                                        viewModel.deletarTransacao(selecionada, incluirSerie = false)
+                                        mostrarDialogoRecorrente = false
+                                        transacaoSelecionada = null
+                                    }
+                                ) {
+                                    Text("Apenas esta")
+                                }
+                                TextButton(
+                                    onClick = {
+                                        mostrarDialogoRecorrente = false
+                                        transacaoSelecionada = null
+                                    }
+                                ) {
+                                    Text("Cancelar")
+                                }
+                            }
+                        }
+                    )
+                } else if (mostrarDialogoSimples) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            mostrarDialogoSimples = false
+                            transacaoSelecionada = null
+                        },
+                        title = { Text("Excluir transação") },
+                        text = { Text("Deseja realmente excluir esta transação?") },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    viewModel.deletarTransacao(selecionada, incluirSerie = false)
+                                    mostrarDialogoSimples = false
+                                    transacaoSelecionada = null
+                                }
+                            ) {
+                                Text("Excluir")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    mostrarDialogoSimples = false
+                                    transacaoSelecionada = null
+                                }
+                            ) {
+                                Text("Cancelar")
+                            }
+                        }
+                    )
+                }
+            }
+            
             // Filtros
             Row(
                 modifier = Modifier
@@ -151,7 +232,14 @@ fun ListaTransacoesScreen(
                     items(transacoes) { transacao ->
                         TransacaoItem(
                             transacao = transacao,
-                            onDelete = { viewModel.deletarTransacao(transacao) }
+                            onDelete = {
+                                transacaoSelecionada = transacao
+                                if (transacao.recorrente) {
+                                    mostrarDialogoRecorrente = true
+                                } else {
+                                    mostrarDialogoSimples = true
+                                }
+                            }
                         )
                     }
                 }

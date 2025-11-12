@@ -103,9 +103,13 @@ class TransacaoViewModel(private val repository: TransacaoRepository) : ViewMode
         }
     }
     
-    fun deletarTransacao(transacao: Transacao) {
+    fun deletarTransacao(transacao: Transacao, incluirSerie: Boolean) {
         viewModelScope.launch {
-            repository.deleteTransacao(transacao)
+            if (incluirSerie && transacao.recorrente) {
+                repository.deleteSerieRecorrente(transacao)
+            } else {
+                repository.deleteTransacao(transacao)
+            }
             carregarTransacoes()
             atualizarSaldo()
         }

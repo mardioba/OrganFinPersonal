@@ -31,5 +31,26 @@ interface TransacaoDao {
     
     @Query("SELECT * FROM transacoes WHERE recorrente = 1 AND parcelaAtual < quantidadeParcelas")
     suspend fun getTransacoesRecorrentesPendentes(): List<Transacao>
+
+    @Query(
+        """
+        DELETE FROM transacoes 
+        WHERE recorrente = 1 
+        AND titulo = :titulo 
+        AND quantidadeParcelas = :quantidadeParcelas 
+        AND valor = :valor 
+        AND categoria = :categoria 
+        AND tipo = :tipo 
+        AND data >= :dataReferencia
+        """
+    )
+    suspend fun deleteTransacoesRecorrentesSeries(
+        titulo: String,
+        quantidadeParcelas: Int,
+        valor: Double,
+        categoria: String,
+        tipo: String,
+        dataReferencia: Long
+    )
 }
 

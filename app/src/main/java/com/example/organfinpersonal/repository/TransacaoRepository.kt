@@ -59,6 +59,21 @@ class TransacaoRepository(private val transacaoDao: TransacaoDao) {
         transacaoDao.deleteTransacao(transacao)
     }
     
+    suspend fun deleteSerieRecorrente(transacao: Transacao) {
+        if (!transacao.recorrente) {
+            transacaoDao.deleteTransacao(transacao)
+            return
+        }
+        transacaoDao.deleteTransacoesRecorrentesSeries(
+            titulo = transacao.titulo,
+            quantidadeParcelas = transacao.quantidadeParcelas,
+            valor = transacao.valor,
+            categoria = transacao.categoria,
+            tipo = transacao.tipo.name,
+            dataReferencia = transacao.data
+        )
+    }
+    
     suspend fun getSaldoAtual(): Double {
         val calendar = Calendar.getInstance()
         val mes = calendar.get(Calendar.MONTH) + 1

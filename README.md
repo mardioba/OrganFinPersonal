@@ -225,3 +225,4 @@ Para dúvidas ou sugestões, abra uma issue no repositório.
 
 Desenvolvido com ❤️ usando Kotlin e Jetpack Compose
 
+

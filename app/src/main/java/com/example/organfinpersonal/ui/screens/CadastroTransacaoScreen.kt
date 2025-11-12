@@ -1,14 +1,17 @@
 package com.example.organfinpersonal.ui.screens
 
+import android.app.DatePickerDialog
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.organfinpersonal.data.TipoTransacao
 import java.util.Calendar
@@ -37,6 +40,8 @@ fun CadastroTransacaoScreen(
     var observacao by remember { mutableStateOf("") }
     var mostrarErro by remember { mutableStateOf(false) }
     
+    val context = LocalContext.current
+
     val categorias = listOf(
         "Alimentação", "Transporte", "Moradia", "Saúde", "Educação",
         "Lazer", "Compras", "Outros"
@@ -131,10 +136,30 @@ fun CadastroTransacaoScreen(
                 readOnly = true,
                 trailingIcon = {
                     IconButton(onClick = {
-                        // Aqui poderia abrir um DatePicker
-                        // Por simplicidade, mantemos a data atual
+                        val datePickerDialog = DatePickerDialog(
+                            context,
+                            { _, year, month, dayOfMonth ->
+                                val novaData = Calendar.getInstance().apply {
+                                    set(Calendar.YEAR, year)
+                                    set(Calendar.MONTH, month)
+                                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                    set(Calendar.HOUR_OF_DAY, 0)
+                                    set(Calendar.MINUTE, 0)
+                                    set(Calendar.SECOND, 0)
+                                    set(Calendar.MILLISECOND, 0)
+                                }
+                                dataSelecionada = novaData
+                            },
+                            dataSelecionada.get(Calendar.YEAR),
+                            dataSelecionada.get(Calendar.MONTH),
+                            dataSelecionada.get(Calendar.DAY_OF_MONTH)
+                        )
+                        datePickerDialog.show()
                     }) {
-                        Text("📅")
+                        Icon(
+                            imageVector = Icons.Filled.CalendarToday,
+                            contentDescription = "Selecionar data"
+                        )
                     }
                 }
             )
